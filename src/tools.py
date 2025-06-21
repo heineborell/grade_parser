@@ -123,7 +123,7 @@ def merger_announced(original, letter, column_name, merged_column_name):
     return merged
 
 
-def lms_to_announced(original_announced_path, original_lms_path):
+def lms_to_announced(original_announced_path, original_lms_path, output_path):
     announced_grades_df = pd.read_excel(original_announced_path)
     midterm_column = "Unnamed: 10"
     final_column = "Unnamed: 11"
@@ -140,6 +140,7 @@ def lms_to_announced(original_announced_path, original_lms_path):
         "letter_grade",
         letter_column,
     )
+    save_as_xls(merged_announced, output_path)
 
     return merged_announced
 
