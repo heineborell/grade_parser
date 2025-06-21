@@ -37,22 +37,13 @@ if __name__ == "__main__":
 
     df_3_orig = pd.read_csv("gc_2025CMN17.10BS103a03_fullgc_2025-06-20-14-15-47.csv")
 
+    orig_columns = list(df_2_orig.columns)
+    my_list = ["midterm", "final", "HW_1", "HW_2", "HW_3", "HW_4"]
+
+    print(orig_columns[tools.get_column_ids(orig_columns, "hw_1")])
+
     # rename columns for easy access
-    df_2 = df_2_orig[
-        [
-            "First Name",
-            "Username",
-            "midterm [Total Pts: 100 Score] |92376",
-            "final [Total Pts: 120 Score] |92377",
-            "hw_1 [Total Pts: 100 Score] |92372",
-            "hw_2 [Total Pts: 100 Score] |92373",
-            "hw_3 [Total Pts: 120 Score] |92374",
-            "hw_4 [Total Pts: 100 Score] |92375",
-            "Attendance [Total Pts: 100 Score] |91625",
-            "letter_grade [Total Pts: 100 Letter] |93621",
-        ]
-    ]
-    df_2 = df_2.rename(
+    df_2 = df_2_orig.rename(
         columns={
             "midterm [Total Pts: 100 Score] |92376": "midterm",
             "final [Total Pts: 120 Score] |92377": "final",
@@ -65,21 +56,7 @@ if __name__ == "__main__":
         }
     )
 
-    df_3 = df_3_orig[
-        [
-            "First Name",
-            "Username",
-            "midterm [Total Pts: 100 Score] |92380",
-            "final [Total Pts: 120 Score] |92381",
-            "hw_1 [Total Pts: 100 Score] |92370",
-            "hw_2 [Total Pts: 100 Score] |92371",
-            "hw_3 [Total Pts: 120 Score] |92378",
-            "hw_4 [Total Pts: 100 Score] |92379",
-            "Attendance [Total Pts: 100 Score] |92017",
-            "letter_grade [Total Pts: 100 Letter] |93620",
-        ]
-    ]
-    df_3 = df_3.rename(
+    df_3 = df_3_orig.rename(
         columns={
             "midterm [Total Pts: 100 Score] |92380": "midterm",
             "final [Total Pts: 120 Score] |92381": "final",

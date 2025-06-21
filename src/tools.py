@@ -2,12 +2,21 @@ import pandas as pd
 import xlwt
 
 
+# get the column ids from original dataframe to replace them with simpler readeable ones
+def get_column_ids(orig_columns, column_name):
+    id = [i for i, item in enumerate(orig_columns) if item.startswith(column_name)]
+    assert len(id) == 1, "sth wrong with renaming the dataframe columns!"
+    return id[0]
+
+
+# takes a list of columns and their weights then calculate weighted avg
 def weighter(df, list_of_columns, list_of_weights):
     df["weighted_avg"] = 0
     for i, j in enumerate(list_of_columns):
         df["weighted_avg"] = df["weighted_avg"] + (list_of_weights[i] / 100) * df[j]
 
 
+# gets the weighted avgs and bins them to letter grades
 def grader(df, list_of_columns, list_of_weights, bins, labs):
     # calculate weighted_avg column
     weighter(df, list_of_columns, list_of_weights)
@@ -17,13 +26,14 @@ def grader(df, list_of_columns, list_of_weights, bins, labs):
     df["letter_grade"] = pd.cut(
         df["weighted_avg"], bins=bins, labels=labs, include_lowest=True
     )
-    # students with missing
+    # students with missing midterm or final gets F
     df.loc[df["letter_grade"].isna(), "letter_grade"] = "F"
     df.loc[df["midterm"].isna(), "midterm"] = 0
     df.loc[df["final"].isna(), "final"] = 0
     return df
 
 
+# I didn't wanna use the df I created during weighted_avg so I merge the weighted_avg results to the already downloaded list from LMS (which is called original)
 def merger(original, letter):
     merged = original.merge(
         letter[["Username", "letter_grade"]], on="Username", how="left", validate="1:1"
