@@ -1,0 +1,13 @@
+[build-system]
+requires=["setuptools","setuptools-scm"]
+build-backend="setuptools.build_meta"
+
+[project]
+name = "grade-parser"
+version = "0.1.0"
+description = "Parser for getting grades from LMS in csv format then compute averages, letter grades and finally parse it as xls for announcement. "
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = ["pandas","seaborn","xlwt","matplotlib","xlrd"]
+
+
