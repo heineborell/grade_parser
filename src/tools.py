@@ -62,6 +62,42 @@ def merger(original, letter):
     return merged
 
 
+def lms_grader(original_df):
+    # weights and bins are hardcoded here change at your will
+    weight_list = [30, 45, 5, 5, 5, 5, 5]
+    column_list = ["midterm", "final", "HW_1", "HW_2", "HW_3", "HW_4", "attendance"]
+
+    # define bins and labels
+    bins = [0, 20, 26, 33, 40, 46, 53, 60, 65, 70, 75, 85, 95, 100]
+    labs = [
+        "A+",
+        "A",
+        "A-",
+        "B+",
+        "B",
+        "B-",
+        "C+",
+        "C",
+        "C-",
+        "D+",
+        "D",
+        "D-",
+        "F",
+    ]
+    labs.reverse()
+    modifed_df = column_clean(original_df)  # change column names
+
+    final_df = grader(
+        modifed_df, column_list, weight_list, bins, labs
+    )  # output a list with weighted grades and letter grades
+
+    merged = merger(
+        original_df, final_df
+    )  # finally merged with the calculated columns with the original_df
+
+    return (final_df, merged)
+
+
 def merger_announced(original, letter, column_name, merged_column_name):
     letter = letter.rename(columns={"Username": original.columns[0]})
     letter[original.columns[0]] = letter[original.columns[0]].astype(str)

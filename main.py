@@ -11,63 +11,36 @@ import tools
 if __name__ == "__main__":
     # main()
 
-    weight_list = [30, 45, 5, 5, 5, 5, 5]
-    column_list = ["midterm", "final", "HW_1", "HW_2", "HW_3", "HW_4", "attendance"]
-
-    # define bins and labels
-    bins = [0, 20, 26, 33, 40, 46, 53, 60, 65, 70, 75, 85, 95, 100]
-    labs = [
-        "A+",
-        "A",
-        "A-",
-        "B+",
-        "B",
-        "B-",
-        "C+",
-        "C",
-        "C-",
-        "D+",
-        "D",
-        "D-",
-        "F",
-    ]
-    labs.reverse()
     # Load your LMS datasets
     df_2_orig = pd.read_csv("gc_2025CMN17.10BS103a02_fullgc_2025-06-20-14-17-04.csv")
 
     df_3_orig = pd.read_csv("gc_2025CMN17.10BS103a03_fullgc_2025-06-20-14-15-47.csv")
 
-    df_2 = tools.column_clean(df_2_orig)
-
-    df_3 = tools.column_clean(df_3_orig)
-    sec = 2
+    sec = 3
     if sec == 2:
-        section_dataframe = df_2
-        section_dataframe_orig = df_2_orig
+        final_df = tools.lms_grader(df_2_orig)[0]
+        merged = tools.lms_grader(df_2_orig)[1]
     else:
-        section_dataframe = df_3
-        section_dataframe_orig = df_3_orig
-
-    final_df = tools.grader(section_dataframe, column_list, weight_list, bins, labs)
-    merged = tools.merger(section_dataframe_orig, final_df)
+        final_df = tools.lms_grader(df_3_orig)[0]
+        merged = tools.lms_grader(df_3_orig)[1]
 
     # # show the dataframes
     if sec == 2:
         with open("weighted_2.csv", "w", encoding="utf-8", newline="") as f:
             final_df.to_csv(f, index=False)
-        # subprocess.run(
-        #     ["vd", "-f", "csv", "-"],
-        #     input=final_df.to_csv(index=True),
-        #     text=True,
-        # )
+        subprocess.run(
+            ["vd", "-f", "csv", "-"],
+            input=final_df.to_csv(index=True),
+            text=True,
+        )
     else:
         with open("weighted_3.csv", "w", encoding="utf-8", newline="") as f:
             final_df.to_csv(f, index=False)
-        # subprocess.run(
-        #     ["vd", "-f", "csv", "-"],
-        #     input=final_df.to_csv(index=True),
-        #     text=True,
-        # )
+        subprocess.run(
+            ["vd", "-f", "csv", "-"],
+            input=merged.to_csv(index=True),
+            text=True,
+        )
 
     #
     # # # Create histogram
