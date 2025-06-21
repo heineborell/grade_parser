@@ -1,5 +1,7 @@
 import pandas as pd
 import xlwt
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 # get the column ids from original dataframe to replace them with simpler readeable ones
@@ -99,6 +101,7 @@ def lms_grader(original_df_path):
     return (final_df, merged)
 
 
+# merges the announced original and the LMS letter graded
 def merger_announced(original, letter, column_name, merged_column_name):
     letter = letter.rename(columns={"Username": original.columns[0]})
     letter[original.columns[0]] = letter[original.columns[0]].astype(str)
@@ -123,6 +126,7 @@ def merger_announced(original, letter, column_name, merged_column_name):
     return merged
 
 
+# this function takes in the original announcement page output and the LMS weighted output then merges midterm, final and letter grades to annoounced
 def lms_to_announced(original_announced_path, original_lms_path, output_path):
     announced_grades_df = pd.read_excel(original_announced_path)
     midterm_column = "Unnamed: 10"
@@ -145,6 +149,7 @@ def lms_to_announced(original_announced_path, original_lms_path, output_path):
     return merged_announced
 
 
+# need this as xls is already deprecated so gotta parse with your hand and shit
 def save_as_xls(df, filename):
     wb = xlwt.Workbook()
     ws = wb.add_sheet("Sheet1")
@@ -158,10 +163,32 @@ def save_as_xls(df, filename):
         for col_num, value in enumerate(row):
             if pd.isna(value):
                 continue  # Leave blank
-            if row_num > 3 and col_num < 15 and value == "nan":
+            if (
+                row_num > 3 and col_num < 15 and value == "nan"
+            ):  # get rid of nans that appear other than letter part
                 continue
             if row_num > 3 and col_num > 15 and value == "nan":
                 value = "W"
             ws.write(row_num, col_num, value)
 
     wb.save(filename)
+
+
+def hist_plotter(merged):
+    # Create histogram
+    plt.style.use("bmh")
+    plt.rcParams.update({"font.size": 12, "figure.dpi": 100})
+    sns.histplot(
+        merged["letter_grade"],
+        color="orange",
+        bins=10,
+        kde=True,
+        edgecolor="black",
+    )
+
+    # # Customize plot
+    plt.title("Distribution of Letter Grades")
+    plt.xlabel("Grade")
+    plt.ylabel("Number of Students")
+    plt.tight_layout()
+    plt.show()
