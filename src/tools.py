@@ -9,6 +9,25 @@ def get_column_ids(orig_columns, column_name):
     return id[0]
 
 
+# actually replacing the columns names (don't remember if this is really needed but factoring the code I didn't bother to think about this in detail, whatever...)
+def column_clean(original_df):
+    orig_columns = list(original_df.columns)
+    # rename columns for easy access
+    df = original_df.rename(
+        columns={
+            orig_columns[get_column_ids(orig_columns, "midterm")]: "midterm",
+            orig_columns[get_column_ids(orig_columns, "final")]: "final",
+            orig_columns[get_column_ids(orig_columns, "hw_1")]: "HW_1",
+            orig_columns[get_column_ids(orig_columns, "hw_2")]: "HW_2",
+            orig_columns[get_column_ids(orig_columns, "hw_3")]: "HW_3",
+            orig_columns[get_column_ids(orig_columns, "hw_4")]: "HW_4",
+            orig_columns[get_column_ids(orig_columns, "Attendance")]: "attendance",
+            orig_columns[get_column_ids(orig_columns, "letter_grade")]: "letter_grade",
+        }
+    )
+    return df
+
+
 # takes a list of columns and their weights then calculate weighted avg
 def weighter(df, list_of_columns, list_of_weights):
     df["weighted_avg"] = 0
