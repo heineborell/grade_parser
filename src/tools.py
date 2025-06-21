@@ -62,8 +62,9 @@ def merger(original, letter):
     return merged
 
 
-def lms_grader(original_df):
+def lms_grader(original_df_path):
     # weights and bins are hardcoded here change at your will
+    original_df = pd.read_csv(original_df_path)
     weight_list = [30, 45, 5, 5, 5, 5, 5]
     column_list = ["midterm", "final", "HW_1", "HW_2", "HW_3", "HW_4", "attendance"]
 
@@ -120,6 +121,27 @@ def merger_announced(original, letter, column_name, merged_column_name):
         merged.loc[merged[merged_column_name] == "D", merged_column_name] = "D0"
 
     return merged
+
+
+def lms_to_announced(original_announced_path, original_lms_path):
+    announced_grades_df = pd.read_excel(original_announced_path)
+    midterm_column = "Unnamed: 10"
+    final_column = "Unnamed: 11"
+    letter_column = "Unnamed: 20"
+    final_df = lms_grader(original_lms_path)[0]
+    merged_announced = merger_announced(
+        merger_announced(
+            merger_announced(announced_grades_df, final_df, "midterm", midterm_column),
+            final_df,
+            "final",
+            final_column,
+        ),
+        final_df,
+        "letter_grade",
+        letter_column,
+    )
+
+    return merged_announced
 
 
 def save_as_xls(df, filename):

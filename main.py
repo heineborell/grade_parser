@@ -12,35 +12,20 @@ if __name__ == "__main__":
     # main()
 
     # Load your LMS datasets
-    df_2_orig = pd.read_csv("gc_2025CMN17.10BS103a02_fullgc_2025-06-20-14-17-04.csv")
-
-    df_3_orig = pd.read_csv("gc_2025CMN17.10BS103a03_fullgc_2025-06-20-14-15-47.csv")
-
-    sec = 3
-    if sec == 2:
-        final_df = tools.lms_grader(df_2_orig)[0]
-        merged = tools.lms_grader(df_2_orig)[1]
-    else:
-        final_df = tools.lms_grader(df_3_orig)[0]
-        merged = tools.lms_grader(df_3_orig)[1]
+    df_2_orig = "gc_2025CMN17.10BS103a02_fullgc_2025-06-20-14-17-04.csv"
+    announced_grades_path = "test_2.xls"
 
     # # show the dataframes
-    if sec == 2:
-        with open("weighted_2.csv", "w", encoding="utf-8", newline="") as f:
-            final_df.to_csv(f, index=False)
-        subprocess.run(
-            ["vd", "-f", "csv", "-"],
-            input=final_df.to_csv(index=True),
-            text=True,
-        )
-    else:
-        with open("weighted_3.csv", "w", encoding="utf-8", newline="") as f:
-            final_df.to_csv(f, index=False)
-        subprocess.run(
-            ["vd", "-f", "csv", "-"],
-            input=merged.to_csv(index=True),
-            text=True,
-        )
+    with open("weighted_2.csv", "w", encoding="utf-8", newline="") as f:
+        tools.lms_grader(df_2_orig)[1].to_csv(f, index=False)
+    # subprocess.run(
+    #     ["vd", "-f", "csv", "-"],
+    #     input=tools.lms_grader(df_2_orig)[1].to_csv(index=True),
+    #     text=True,
+    # )
+
+    ann = tools.lms_to_announced(announced_grades_path, df_2_orig)
+    subprocess.run(["vd", "-f", "csv", "-"], input=ann.to_csv(index=False), text=True)
 
     #
     # # # Create histogram
@@ -63,6 +48,7 @@ if __name__ == "__main__":
     #
     # # load xls
     #
+
     # if sec == 2:
     #     announced_grades_df = pd.read_excel("test_2.xls")
     #     midterm_column = "Unnamed: 10"
